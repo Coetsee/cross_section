@@ -1,0 +1,45 @@
+---
+title: "wrangling"
+author: "J Coetsee - 19491050"
+date: "11/07/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(pacman)
+p_load("panelr", "haven", "foreign", "tidyverse")
+```
+
+```{r}
+#read in data:
+
+data <- read_dta("data/NIDS-CRAM_1_2_3_4_5.dta")
+
+head <- as.data.frame(head(data, 10)) %>% 
+    mutate(across(.cols = everything(), as.factor))
+
+# test making dataset long:
+
+head <- head %>% 
+    long_panel(head, id = "pid", prefix = "w", suffix = "_", begin = 1, end = 5, label_location = "beginning", use.regex = TRUE)
+
+head %>% 
+  gather(wave, value, w1_nc_outcome:w5_nc_intrv_years_exp_oth) %>% 
+  separate(wave, c("wave", "col")) %>% 
+  arrange(pid) %>% 
+  spread(col, value)
+
+
+reshape(head, idvar = "pid", varying = 8:1018,times = c(1,2,3,4,5), sep = "_nc",  v.names = "wave", direction = "long")
+
+colnames <- colnames(head)
+    
+
+head <- head %>% 
+    add_column(wave = NA) %>% 
+    mutate(wave == ifelse(select(head, contains("w1")), "first", NA))
+
+```
+

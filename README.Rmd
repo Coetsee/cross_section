@@ -1,0 +1,10 @@
+---
+title: "README"
+author: "J Coetsee - 19491050"
+date: "10/07/2021"
+output: html_document
+---
+
+# Readme
+
+This is the project folder for a masters cross section econometrics project.
