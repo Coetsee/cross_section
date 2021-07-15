@@ -10,36 +10,177 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(pacman)
 p_load("panelr", "haven", "foreign", "tidyverse")
+theme_set(theme_light())
 ```
 
 ```{r}
 #read in data:
 
-data <- read_dta("data/NIDS-CRAM_1_2_3_4_5.dta")
+data <- read_dta("data/NIDS-CRAM_clean_long.dta")
 
-head <- as.data.frame(head(data, 10)) %>% 
-    mutate(across(.cols = everything(), as.factor))
+data <- data %>% 
+    mutate(across(.cols = everything(), haven::as_factor))
 
-# test making dataset long:
-
-head <- head %>% 
-    long_panel(head, id = "pid", prefix = "w", suffix = "_", begin = 1, end = 5, label_location = "beginning", use.regex = TRUE)
-
-head %>% 
-  gather(wave, value, w1_nc_outcome:w5_nc_intrv_years_exp_oth) %>% 
-  separate(wave, c("wave", "col")) %>% 
-  arrange(pid) %>% 
-  spread(col, value)
+head <- as.data.frame(head(data, 10)) #%>% 
+    mutate(across(.cols = everything(), as.factor)) %>% 
+    select(matches("pid|edter|popgrp|edschgrd|hhinc|hhincdec1|hhincsrc1|incgov|unemdc|emtyp|enrgelec|watsrc|nopres|dwltyp|_prov")) %>% 
+    select(-contains("flg"))
+```
 
 
-reshape(head, idvar = "pid", varying = 8:1018,times = c(1,2,3,4,5), sep = "_nc",  v.names = "wave", direction = "long")
+```{r}
+#descriptive of hunger
 
-colnames <- colnames(head)
+hunger_data <- data %>% 
+    select(c(wave, w_nc_hunger, w_nc_no_food, w_nc_fdcyn)) %>% 
+    mutate(wave = ifelse(wave == "Contact 1", 1, wave)) %>% 
+    mutate(w_nc_hunger = as.factor(w_nc_hunger))
+
+hungerplot1df <- hunger_data %>% 
+    group_by(wave, w_nc_hunger) %>% 
+    count() %>% 
+    rename(count_hun = n)
+
+hungerplot2df<- hunger_data %>% 
+    group_by(wave, w_nc_no_food) %>% 
+    count() %>% 
+    rename(count_food = n)
+
+hungerplot3df<- hunger_data %>% 
+    group_by(wave, w_nc_fdcyn) %>% 
+    mutate(w_nc_fdcyn = as.numeric(w_nc_fdcyn)) %>% 
+    mutate(w_nc_fdcyn = ifelse(w_nc_fdcyn == 1, NA, w_nc_fdcyn),
+           w_nc_fdcyn = ifelse(w_nc_fdcyn == 2, NA, w_nc_fdcyn),
+           w_nc_fdcyn = ifelse(w_nc_fdcyn == 4, NA, w_nc_fdcyn)) %>% 
+    #mutate(w_nc_fdcyn = ifelse(w_nc_fdcyn == c(1,2,4), NA, w_nc_fdcyn)) %>% 
+    count() %>%
+    rename(count_child = n)
     
 
-head <- head %>% 
-    add_column(wave = NA) %>% 
-    mutate(wave == ifelse(select(head, contains("w1")), "first", NA))
+
+hungerplotdata <- inner_join(hungerplot1df, hungerplot2df, by = "wave") 
+hungerplotdata <- inner_join(hungerplotdata, hungerplot3df, by = "wave") 
+
+
+hungerplotdata %>% 
+    group_by(wave) %>% 
+    mutate(prop_hun = as.numeric(paste0(round(count_hun/sum(count_hun)*100,2)))) %>% 
+    mutate(prop_food = as.numeric(paste0(round(count_food/sum(count_food)*100,2)))) %>% 
+    mutate(prop_child = as.numeric(paste0(round(count_child/sum(count_child)*100,2)))) %>% 
+    group_by(wave, w_nc_hunger) %>% 
+    mutate(total_prop_hun = sum(prop_hun)) %>%
+    ungroup() %>% 
+    group_by(wave, w_nc_no_food) %>% 
+    mutate(total_prop_food = sum(prop_food)) %>%
+    group_by(wave, w_nc_fdcyn) %>% 
+    mutate(total_prop_child = sum(prop_child)) %>%
+    gather(key = measure, value = value, total_prop_hun:total_prop_child) %>% 
+    group_by(wave) %>% 
+    filter(w_nc_hunger == 1,
+           w_nc_no_food == 1,
+           w_nc_fdcyn == 5) %>%
+    mutate(measure = recode(measure, "total_prop_food" = "No Money for Food", "total_prop_hun" = "At Least One Person in HH Hungry", "total_prop_child" = "Child Hunger")) %>% 
+    ggplot(aes(wave, value, fill = measure)) +
+    geom_col(alpha = 0.7, colour = "Black", 
+             position = position_dodge(0.7), width = 0.5) +
+    labs(y = "Percentage of Population",
+         x = "Wave",
+         title = "") +
+    geom_text(aes(label = value), vjust = -0.5, size = 2,
+              position=position_dodge(width=0.7))+
+    scale_fill_brewer(palette = "Accent") +
+    #scale_colour_brewer(palette = "Accent") +
+        facet_wrap(~measure) +
+    theme(legend.position = "none")
+    
+```
+
+#SRD plot
+
+```{r}
+
+srd <- data %>% 
+    select(wave, w_nc_race, w_nc_c19grant_hh, w_nc_gender, w_nc_prov, w_nc_age, w_nc_urban, w_nc_hhinccv)
+    
+srd_grant <- srd %>% 
+    group_by(wave, w_nc_c19grant_hh) %>% 
+    count() %>% 
+    rename(count_grant = n) %>% 
+    group_by(wave) %>% 
+    mutate(prop_grant = as.numeric(paste0(round(count_grant/sum(count_grant)*100,2)))) %>% 
+    group_by(wave, w_nc_c19grant_hh) %>% 
+    mutate(total_prop_grant = sum(prop_grant))
+    
+srd_race <- srd %>% 
+    group_by(wave, w_nc_race) %>% 
+    count() %>% 
+    rename(count_race = n) %>% 
+    group_by(wave) %>% 
+    mutate(prop_race = as.numeric(paste0(round(count_race/sum(count_race)*100,2)))) %>% 
+    group_by(wave, w_nc_race) %>% 
+    mutate(total_prop_race = sum(prop_race)) 
+
+srd_prov <- srd %>% 
+    group_by(wave, w_nc_prov) %>% 
+    count() %>% 
+    rename(count_prov = n) %>% 
+    group_by(wave) %>% 
+    mutate(prop_prov = as.numeric(paste0(round(count_prov/sum(count_prov)*100,2)))) %>% 
+    group_by(wave, w_nc_prov) %>% 
+    mutate(total_prop_prov = sum(prop_prov))
+
+srd_gen <- srd %>% 
+    group_by(wave, w_nc_gender) %>% 
+    count() %>% 
+    rename(count_gen = n) %>% 
+    group_by(wave) %>% 
+    mutate(prop_gen = as.numeric(paste0(round(count_gen/sum(count_gen)*100,2)))) %>% 
+    group_by(wave, w_nc_gender) %>% 
+    mutate(total_prop_gen = sum(prop_gen)) 
+
+srd_age <- srd %>% 
+    group_by(wave, w_nc_age) %>% 
+    count() %>% 
+    rename(count_age = n) %>% 
+    group_by(wave) %>% 
+    mutate(prop_age = as.numeric(paste0(round(count_age/sum(count_age)*100,2)))) %>% 
+    group_by(wave, w_nc_age) %>% 
+    mutate(total_prop_age = sum(prop_age))
+
+srd_urban <- srd %>% 
+    group_by(wave, w_nc_urban) %>% 
+    count() %>% 
+    rename(count_urban = n) %>% 
+    group_by(wave) %>% 
+    mutate(prop_urban = as.numeric(paste0(round(count_urban/sum(count_urban)*100,2)))) %>% 
+    group_by(wave, w_nc_urban) %>% 
+    mutate(total_prop_urban = sum(prop_urban))
+
+
+
+    
+plotdata <- inner_join(srd_grant, srd_race, by = "wave")
+plotdata <- inner_join(plotdata, srd_age, by = "wave") 
+plotdata <- inner_join(plotdata, srd_gen, by = "wave")
+plotdata <- inner_join(plotdata, srd_urban, by = "wave") 
+plotdata <- inner_join(plotdata, srd_prov, by = "wave") 
+
+plotdata %>% 
+    gather(key = measure, value = value, c(total_prop_race, total_prop_gen, total_prop_age, total_prop_prov, total_prop_urban)) %>% 
+    group_by(wave) %>% 
+    #mutate(measure = recode(measure, "total_prop_food" = "No Money for Food", "total_prop_hun" = "At #Least One Person in HH Hungry", "total_prop_child" = "Child Hunger")) %>% 
+    ggplot(aes(wave, value, fill = measure)) +
+    geom_col(alpha = 0.7, colour = "Black", 
+             position = position_dodge(0.7), width = 0.5) +
+    labs(y = "Percentage of Population",
+         x = "Wave",
+         title = "") +
+    geom_text(aes(label = value), vjust = -0.5, size = 2,
+              position=position_dodge(width=0.7))+
+    scale_fill_brewer(palette = "Accent") +
+    #scale_colour_brewer(palette = "Accent") +
+        facet_wrap(~ measure) +
+    theme(legend.position = "none")
 
 ```
 

@@ -71,3 +71,58 @@ forvalues i = 1/$num_waves {
 
 *===========================================================================================================================================
 *THE END
+
+
+* ==========================================================
+
+// Setup
+global DataIN "C:\Projects\cross_section\cross_section\data" // "parent" folder, which contains folders for each wave
+cd "$DataIN" 
+clear all
+set more off
+set maxvar 20000 
+
+// Merge datasets together per wave
+forvalues i = 1/5 {
+
+global VersionIN: dir "$DataIN/Wave `i'" files "NIDS-CRAM*.dta", respectcase
+global VersionIN: subinstr global VersionIN ".dta" "",all
+global VersionIN: subinstr global VersionIN "NIDS-CRAM_" "",all
+global VersionIN: subinstr global VersionIN `"""' "",all
+use "$DataIN/Wave `i'/NIDS-CRAM_$VersionIN.dta", clear
+merge 1:1 pid using "$DataIN/Wave `i'/derived_NIDS-CRAM_$VersionIN.dta"
+drop if _merge!=3
+drop _merge
+drop w`i'_nc_outcome
+save wave`i'_merged_nc, replace
+}
+
+// Link each cross-section with each other using link file
+use "$DataIN/Wave 5/Link_File_NIDS-CRAM_$VersionIN.dta", clear
+merge 1:1 pid using wave1_merged_nc
+drop _m
+merge 1:1 pid using wave2_merged_nc
+cap drop _merge
+merge 1:1 pid using wave3_merged_nc
+cap drop _merge
+merge 1:1 pid using wave4_merged_nc
+cap drop _merge
+merge 1:1 pid using wave5_merged_nc
+cap drop _merge
+save NIDS-CRAM_12345.dta, replace
+
+erase wave1_merged_nc.dta
+erase wave2_merged_nc.dta
+erase wave3_merged_nc.dta
+erase wave4_merged_nc.dta
+erase wave5_merged_nc.dta
+
+*** END ***
+
+
+ 
+
+
+
+
+
