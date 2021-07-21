@@ -120,14 +120,14 @@ srd_race <- srd %>%
     group_by(wave, w_nc_race) %>% 
     mutate(total_prop_race = sum(prop_race)) 
 
-srd_prov <- srd %>% 
-    group_by(wave, w_nc_prov) %>% 
-    count() %>% 
-    rename(count_prov = n) %>% 
-    group_by(wave) %>% 
-    mutate(prop_prov = as.numeric(paste0(round(count_prov/sum(count_prov)*100,2)))) %>% 
-    group_by(wave, w_nc_prov) %>% 
-    mutate(total_prop_prov = sum(prop_prov))
+#srd_prov <- srd %>% 
+#    group_by(wave, w_nc_prov) %>% 
+#    count() %>% 
+#    rename(count_prov = n) %>% 
+#    group_by(wave) %>% 
+#    mutate(prop_prov = as.numeric(paste0(round(count_prov/sum(count_prov)*100,2)))) %>% 
+#    group_by(wave, w_nc_prov) %>% 
+#    mutate(total_prop_prov = sum(prop_prov))
 
 srd_gen <- srd %>% 
     group_by(wave, w_nc_gender) %>% 
@@ -160,27 +160,69 @@ srd_urban <- srd %>%
 
     
 plotdata <- inner_join(srd_grant, srd_race, by = "wave")
-plotdata <- inner_join(plotdata, srd_age, by = "wave") 
+#plotdata <- inner_join(plotdata, srd_age, by = "wave") 
 plotdata <- inner_join(plotdata, srd_gen, by = "wave")
 plotdata <- inner_join(plotdata, srd_urban, by = "wave") 
-plotdata <- inner_join(plotdata, srd_prov, by = "wave") 
+#plotdata <- inner_join(plotdata, srd_prov, by = "wave") 
+
+plotdata <- plotdata %>% 
+    select(wave,w_nc_c19grant_hh, w_nc_gender, w_nc_race,  total_prop_grant, total_prop_race, total_prop_gen, total_prop_urban) %>% 
+    gather(key = measure, value = value, c(total_prop_grant, total_prop_race, total_prop_gen, total_prop_urban)) %>% 
+    group_by(wave)
 
 plotdata %>% 
-    gather(key = measure, value = value, c(total_prop_race, total_prop_gen, total_prop_age, total_prop_prov, total_prop_urban)) %>% 
-    group_by(wave) %>% 
     #mutate(measure = recode(measure, "total_prop_food" = "No Money for Food", "total_prop_hun" = "At #Least One Person in HH Hungry", "total_prop_child" = "Child Hunger")) %>% 
     ggplot(aes(wave, value, fill = measure)) +
     geom_col(alpha = 0.7, colour = "Black", 
-             position = position_dodge(0.7), width = 0.5) +
+             position = "dodge", width = 0.3) +
     labs(y = "Percentage of Population",
          x = "Wave",
-         title = "") +
-    geom_text(aes(label = value), vjust = -0.5, size = 2,
-              position=position_dodge(width=0.7))+
+         title = "") +   
     scale_fill_brewer(palette = "Accent") +
     #scale_colour_brewer(palette = "Accent") +
         facet_wrap(~ measure) +
     theme(legend.position = "none")
+
+plotdata <- plotdata %>% 
+    mutate(wave = gsub("Contact", "", wave))
+
+plotdata %>% 
+    group_by(wave) %>% 
+    mutate(wave = gsub("Contact", "", wave)) %>%
+    filter(measure == "total_prop_grant",
+            wave != " 1") %>% 
+    mutate(w_nc_c19grant_hh = ifelse(w_nc_c19grant_hh == 1, "Yes", w_nc_c19grant_hh),
+           w_nc_c19grant_hh = ifelse(w_nc_c19grant_hh == 1, "No", w_nc_c19grant_hh)) %>% 
+    mutate(w_nc_c19grant_hh = fct_reorder(w_nc_c19grant_hh, value)) %>% 
+    ggplot(aes(wave, value, fill = w_nc_c19grant_hh)) +
+    geom_col(alpha = 0.7, colour = "Black", 
+             position = position_dodge(0.8), width = 0.6) +
+    labs(y = "Percentage of Population",
+         x = "Wave",
+         title = "", 
+         fill = "C19 Grant in HH") +   
+    scale_fill_brewer(palette = "Accent") +
+    geom_text(aes(label = value), vjust = -0.6, size = 2,
+              position=position_dodge(width=0.7))
+
+    
+
+
+
+
+
+
+raceplot <- plotdata %>% 
+    select(wave, w_nc_c19grant_hh, w_nc_race) %>% 
+    filter(wave != "Contact 1",
+           w_nc_c19grant_hh == 1) %>% 
+    group_by(wave, w_nc_c19grant_hh) %>% 
+        ggplot(aes(x = w_nc_c19grant_hh, fill = w_nc_race))+
+    geom_bar(alpha = 0.7, colour = "Black", 
+             position = position_dodge(0.5), width = 0.2)+
+    facet_wrap(~ wave)
+
+
 
 ```
 

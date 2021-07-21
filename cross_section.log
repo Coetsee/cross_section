@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2021.3.29)  15 JUL 2021 19:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2021.3.29)  16 JUL 2021 23:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -657,7 +657,14 @@ Package caption Info: longtable package is loaded.
 Package: ltcaption 2020/05/30 v1.4b longtable captions (AR)
 ))
 \cslhangindent=\skip84
-(./cross_section.aux)
+(./cross_section.aux
+
+LaTeX Warning: Label `results' multiply defined.
+
+
+LaTeX Warning: Label `appendix' multiply defined.
+
+)
 \openout1 = `cross_section.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 166.
@@ -812,11 +819,11 @@ LaTeX Font Info:    Trying to load font information for OT1+lmtt on input line
 File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 200.
+(Font)              <9> on input line 195.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 200.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-00.
+(Font)              <5> on input line 195.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
+95.
 (c:/Users/Outlet/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) [1
@@ -824,10 +831,10 @@ File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
 {c:/Users/Outlet/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdft
 ex.map}]
-<figures/hunger_descrip.png, id=63, 618.05907pt x 353.82187pt>
+<figures/hunger_descrip.png, id=61, 618.05907pt x 353.82187pt>
 File: figures/hunger_descrip.png Graphic file (type png)
 <use figures/hunger_descrip.png>
-Package pdftex.def Info: figures/hunger_descrip.png  used on input line 282.
+Package pdftex.def Info: figures/hunger_descrip.png  used on input line 308.
 (pdftex.def)             Requested size: 483.41216pt x 276.74658pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -837,7 +844,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[2 <./figures/hunger_descrip.png>]
+[2]
+<figures/c19_grant_descrip.png, id=72, 566.115pt x 335.75438pt>
+File: figures/c19_grant_descrip.png Graphic file (type png)
+<use figures/c19_grant_descrip.png>
+Package pdftex.def Info: figures/c19_grant_descrip.png  used on input line 312.
+
+(pdftex.def)             Requested size: 483.41216pt x 286.71434pt.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -846,7 +859,82 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[3]
+[3 <./figures/hunger_descrip.png> <./figures/c19_grant_descrip.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[4]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[5]
+<figures/hunger_table.png, id=104, 496.85625pt x 298.86656pt>
+File: figures/hunger_table.png Graphic file (type png)
+<use figures/hunger_table.png>
+Package pdftex.def Info: figures/hunger_table.png  used on input line 443.
+(pdftex.def)             Requested size: 483.41216pt x 290.7849pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[6 <./figures/hunger_table.PNG>]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[7]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[8]
+<figures/childhunger_table.png, id=128, 497.60907pt x 299.61937pt>
+File: figures/childhunger_table.png Graphic file (type png)
+<use figures/childhunger_table.png>
+Package pdftex.def Info: figures/childhunger_table.png  used on input line 523.
+
+(pdftex.def)             Requested size: 483.41216pt x 291.07848pt.
+<figures/nomoney_table.png, id=129, 475.02469pt x 298.11375pt>
+File: figures/nomoney_table.png Graphic file (type png)
+<use figures/nomoney_table.png>
+Package pdftex.def Info: figures/nomoney_table.png  used on input line 527.
+(pdftex.def)             Requested size: 483.41216pt x 303.38968pt.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[9 <./figures/childhunger_table.PNG>]
+<figures/hausman1.png, id=137, 478.03593pt x 203.25937pt>
+File: figures/hausman1.png Graphic file (type png)
+<use figures/hausman1.png>
+Package pdftex.def Info: figures/hausman1.png  used on input line 531.
+(pdftex.def)             Requested size: 483.41216pt x 205.54465pt.
 No file cross_section.bbl.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -856,15 +944,19 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[4] (./cross_section.aux)
+[10 <./figures/nomoney_table.PNG> <./figures/hausman1.PNG>] (./cross_section.au
+x)
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `cross_section.out' has not changed.
-(rerunfilecheck)             Checksum: 693363F08CC223222322D8BD97008093;1038.
+(rerunfilecheck)             Checksum: 4842F1CB99A8363542B9C09C2933F6BF;805.
  ) 
 Here is how much of TeX's memory you used:
- 14902 strings out of 480962
- 258153 string characters out of 5905732
- 546260 words of memory out of 5000000
- 31823 multiletter control sequences out of 15000+600000
+ 14961 strings out of 480962
+ 259483 string characters out of 5905732
+ 554190 words of memory out of 5000000
+ 31861 multiletter control sequences out of 15000+600000
  470241 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  83i,11n,88p,278b,748s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -880,10 +972,10 @@ dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/Outlet/AppData/Roaming/TinyTeX/
 texmf-dist/fonts/type1/public/lm/lmri7.pfb><c:/Users/Outlet/AppData/Roaming/Tin
 yTeX/texmf-dist/fonts/type1/public/lm/lmri9.pfb><c:/Users/Outlet/AppData/Roamin
 g/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on cross_section.pdf (4 pages, 219408 bytes).
+Output written on cross_section.pdf (10 pages, 302719 bytes).
 PDF statistics:
- 131 PDF objects out of 1000 (max. 8388607)
- 111 compressed objects within 2 object streams
- 29 named destinations out of 1000 (max. 500000)
- 86 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 193 PDF objects out of 1000 (max. 8388607)
+ 157 compressed objects within 2 object streams
+ 45 named destinations out of 1000 (max. 500000)
+ 87 words of extra memory for PDF output out of 10000 (max. 10000000)
 
