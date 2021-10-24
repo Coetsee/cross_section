@@ -8,3 +8,5 @@ output: html_document
 # Readme
 
 This is the project folder for a masters cross section econometrics project.
+
+The final output is the file _19491050.pdf_. 
